@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import cv2
 from PIL import Image, ImageFilter
 
+
 img = cv2.imread('fig338.png', cv2.IMREAD_GRAYSCALE)
 
 #Filtro da média
