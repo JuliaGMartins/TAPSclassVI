@@ -7,15 +7,12 @@ Original file is located at
     https://colab.research.google.com/drive/1uJ0aF-EzbFwUYnakXh0ci4OLEpVetZND
 """
 
-import numpy as np #biblioteca de matemática/numérica
-import matplotlib.pyplot as plt #biblioteca de visualização
-import cv2 #biblioteca de visão computacional
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
 from PIL import Image, ImageFilter
 
-#image = cv2.imread('fig335.png', cv2.IMREAD_GRAYSCALE)
-#img = cv2.imread('saitama.png', cv2.IMREAD_GRAYSCALE)
 img = cv2.imread('fig338.png', cv2.IMREAD_GRAYSCALE)
-#plt.imshow(img, cmap='gray')
 
 #Filtro da média
 n = 3
@@ -23,7 +20,7 @@ borda = (n-1)//2
 w = np.array([[1,2,1],[2,4,2],[1,2,1]]) / 16
 print(w.sum())
 
-altura, largura = image.shape #pega a altura e largura
+altura, largura = image.shape
 out_image = np.zeros((altura,largura))
 
 for x in range(borda, altura - borda):
@@ -35,7 +32,7 @@ plt.imshow(out_image, cmap= 'gray')
 #Filtro da média
 n = 5
 borda = (n-1)//2
-altura, largura = image.shape #pega a altura e largura
+altura, largura = image.shape
 w = np.ones((n,n))/n**2
 print(w.sum())
 
@@ -53,7 +50,7 @@ borda = (n-1)//2
 w = np.array([[0,1,0],[1,-4,1],[0,1,0]])
 print(w.sum())
 
-altura, largura = img.shape #pega a altura e largura
+altura, largura = img.shape
 imagem = np.zeros((altura,largura))
 
 for x in range(borda, altura - borda):
@@ -68,7 +65,7 @@ borda = (n-1)//2
 w = np.array([[0,1,0],[1,-4,1],[0,1,0]])
 print(w.sum())
 
-altura, largura = lua.shape #pega a altura e largura
+altura, largura = lua.shape
 imagem = np.zeros((altura,largura))
 
 for x in range(borda, altura - borda):
@@ -78,32 +75,32 @@ for x in range(borda, altura - borda):
 plt.imshow(imagem)
 
 n = 3
-borda = (n-1)//2 #definindo o tamanho da borda
+borda = (n-1)//2
 w = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
-altura, largura = lua.shape #pega a altura e largura
+altura, largura = lua.shape
 dy = np.zeros((altura,largura))
 
 for x in range(borda, altura - borda):
   for y in range(borda, largura - borda):
     janela= lua[x-borda:x+borda+1,y-borda:y+borda+1]
     dy[x,y] = np.sum(w*janela)
-    
+
 plt.imshow(dy, cmap = 'gray')
 
 n = 3
-borda = (n-1)//2 #definindo o tamanho da borda
+borda = (n-1)//2
 w = np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
-altura, largura = lua.shape #pega a altura e largura
+altura, largura = lua.shape
 dx = np.zeros((altura,largura))
 
 for x in range(borda, altura - borda):
   for y in range(borda, largura - borda):
     janela= lua[x-borda:x+borda+1,y-borda:y+borda+1]
     dx[x,y] = np.sum(w*janela)
-    
+
 plt.imshow(dx, cmap = 'gray')
 
-magnitude = np.sqrt(dx**2 + dy**2) #np.abs(dx) + np.abs(dy)
+magnitude = np.sqrt(dx**2 + dy**2)
 plt.imshow(magnitude, cmap = 'gray')
 
 plt.imshow(img+magnitude, cmap = 'gray', vmax=255, vmin=0)
