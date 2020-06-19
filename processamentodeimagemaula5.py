@@ -20,7 +20,7 @@ def filtro_media (img):
     borda = (n-1)//2
     filtro = np.array([[1,2,1],[2,4,2],[1,2,1]]) / 16
     altura, largura = img.shape
-    out_image = np.zeros((altura,largura))
+    imagem = np.zeros((altura,largura))
 
     for x in range(borda, altura - borda):
       for y in range(borda, largura - borda):
@@ -28,6 +28,7 @@ def filtro_media (img):
         imagem[x,y] = np.sum(filtro * janela)
 
     plt.imshow(imagem, cmap= 'gray')
+    plt.show()
 
 #Filtro da média
 def filtro_media2 (img):
@@ -43,6 +44,7 @@ def filtro_media2 (img):
         imagem[x,y] = np.sum(filtro * janela)
 
     plt.imshow(imagem, cmap= 'gray')
+    plt.show()
 
 #filtro passa-alta / laplaciana
 def filtro_laplaciano (img):
@@ -58,9 +60,10 @@ def filtro_laplaciano (img):
         imagem[x,y] = np.sum(filtro * janela)
 
     plt.imshow(imagem, cmap='gray', vmax=255, vmin=0)
+    plt.show()
 
 #filtro sobel dy
-def filtro_sobelDy (img):
+def filtro_sobel_dy (img):
     n = 3
     borda = (n-1)//2
     filtro = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
@@ -72,28 +75,39 @@ def filtro_sobelDy (img):
         janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
         dy[x,y] = np.sum(filtro * janela)
 
-    plt.imshow(dy, cmap = 'gray')
+    return dy
 
 #filtro sobel dx
-def filtro_sobelDx (img):
+def filtro_sobel_dx (img):
     n = 3
     borda = (n-1)//2
-    w = np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
+    filtro = np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
     altura, largura = img.shape
     dx = np.zeros((altura,largura))
 
     for x in range(borda, altura - borda):
       for y in range(borda, largura - borda):
         janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
-        dx[x,y] = np.sum(w*janela)
+        dx[x,y] = np.sum(filtro*janela)
 
-    plt.imshow(dx, cmap = 'gray')
+    return dx
 
 #magnitude da imagem dada pelo dx e dy, obtendo as bordas
-def magnitude (dx, dy):
+def magnitude (img):
+    dx = filtro_sobel_dx(img)
+    dy = filtro_sobel_dy(img)
     magnitude = np.sqrt(dx**2 + dy**2)
-    plt.imshow(magnitude, cmap = 'gray')
+    return magnitude
 
 #magnitune + imagem, destacando as bordas
-def magnitude_mais_img (img, magnitude):
-    plt.imshow(img+magnitude, cmap = 'gray', vmax=255, vmin=0)
+def magnitude_mais_img (img):
+    return img+magnitude(img)
+
+def show_img(img, fig, plot_index):
+    fig.add_subplot(*plot_index)
+    plt.imshow(img, cmap= 'gray', vmax=255, vmin=0)
+
+fig = plt.figure()
+show_img(img, fig, (1,2,1))
+show_img(magnitude_mais_img(img), fig, (1,2,2))
+plt.show()
