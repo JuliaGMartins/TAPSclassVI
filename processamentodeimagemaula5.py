@@ -12,96 +12,102 @@ import matplotlib.pyplot as plt
 import cv2
 from PIL import Image, ImageFilter
 
-
 img = cv2.imread('fig338.png', cv2.IMREAD_GRAYSCALE)
 
 #Filtro da média
-n = 3
-borda = (n-1)//2
-w = np.array([[1,2,1],[2,4,2],[1,2,1]]) / 16
-print(w.sum())
+def filtro_media (img):
+    n = 3
+    borda = (n-1)//2
+    w = np.array([[1,2,1],[2,4,2],[1,2,1]]) / 16
+    print(w.sum())
+    altura, largura = image.shape
+    out_image = np.zeros((altura,largura))
 
-altura, largura = image.shape
-out_image = np.zeros((altura,largura))
-
-for x in range(borda, altura - borda):
-  for y in range(borda, largura - borda):
-    janela= image[x-borda:x+borda+1,y-borda:y+borda+1]
-    out_image[x,y] = np.sum(w * janela)
-plt.imshow(out_image, cmap= 'gray')
+    for x in range(borda, altura - borda):
+      for y in range(borda, largura - borda):
+        janela= image[x-borda:x+borda+1,y-borda:y+borda+1]
+        out_image[x,y] = np.sum(w * janela)
+    plt.imshow(out_image, cmap= 'gray')
 
 #Filtro da média
-n = 5
-borda = (n-1)//2
-altura, largura = image.shape
-w = np.ones((n,n))/n**2
-print(w.sum())
+def filtro_media2 (img):
+    n = 5
+    borda = (n-1)//2
+    altura, largura = image.shape
+    w = np.ones((n,n))/n**2
+    print(w.sum())
 
-imagem = np.zeros((altura,largura))
+    imagem = np.zeros((altura,largura))
 
-for x in range(borda, altura - borda):
-  for y in range(borda, largura - borda):
-    janela= image[x-borda:x+borda+1,y-borda:y+borda+1]
-    imagem[x,y] = np.sum(w * janela)
-plt.imshow(imagem, cmap= 'gray')
-
-#filtro passa-alta / laplaciana
-n = 3
-borda = (n-1)//2
-w = np.array([[0,1,0],[1,-4,1],[0,1,0]])
-print(w.sum())
-
-altura, largura = img.shape
-imagem = np.zeros((altura,largura))
-
-for x in range(borda, altura - borda):
-  for y in range(borda, largura - borda):
-    janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
-    imagem[x,y] = np.sum(w * janela)
-plt.imshow(imagem, cmap='gray', vmax=255, vmin=0)
+    for x in range(borda, altura - borda):
+      for y in range(borda, largura - borda):
+        janela= image[x-borda:x+borda+1,y-borda:y+borda+1]
+        imagem[x,y] = np.sum(w * janela)
+    plt.imshow(imagem, cmap= 'gray')
 
 #filtro passa-alta / laplaciana
-n = 3
-borda = (n-1)//2
-w = np.array([[0,1,0],[1,-4,1],[0,1,0]])
-print(w.sum())
+def filtro_laplaciano (img):
+    n = 3
+    borda = (n-1)//2
+    w = np.array([[0,1,0],[1,-4,1],[0,1,0]])
+    print(w.sum())
 
-altura, largura = lua.shape
-imagem = np.zeros((altura,largura))
+    altura, largura = img.shape
+    imagem = np.zeros((altura,largura))
 
-for x in range(borda, altura - borda):
-  for y in range(borda, largura - borda):
-    janela= lua[x-borda:x+borda+1,y-borda:y+borda+1]
-    imagem[x,y] = np.sum(w * janela)
-plt.imshow(imagem)
+    for x in range(borda, altura - borda):
+      for y in range(borda, largura - borda):
+        janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
+        imagem[x,y] = np.sum(w * janela)
+    plt.imshow(imagem, cmap='gray', vmax=255, vmin=0)
 
-n = 3
-borda = (n-1)//2
-w = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
-altura, largura = lua.shape
-dy = np.zeros((altura,largura))
+#filtro passa-alta / laplaciana
+def filtro_laplaciano2 (img):
+    n = 3
+    borda = (n-1)//2
+    w = np.array([[0,1,0],[1,-4,1],[0,1,0]])
+    print(w.sum())
 
-for x in range(borda, altura - borda):
-  for y in range(borda, largura - borda):
-    janela= lua[x-borda:x+borda+1,y-borda:y+borda+1]
-    dy[x,y] = np.sum(w*janela)
+    altura, largura = lua.shape
+    imagem = np.zeros((altura,largura))
 
-plt.imshow(dy, cmap = 'gray')
+    for x in range(borda, altura - borda):
+      for y in range(borda, largura - borda):
+        janela= lua[x-borda:x+borda+1,y-borda:y+borda+1]
+        imagem[x,y] = np.sum(w * janela)
+    plt.imshow(imagem)
 
-n = 3
-borda = (n-1)//2
-w = np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
-altura, largura = lua.shape
-dx = np.zeros((altura,largura))
+def filtro_sobel (img):
+    n = 3
+    borda = (n-1)//2
+    w = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
+    altura, largura = lua.shape
+    dy = np.zeros((altura,largura))
 
-for x in range(borda, altura - borda):
-  for y in range(borda, largura - borda):
-    janela= lua[x-borda:x+borda+1,y-borda:y+borda+1]
-    dx[x,y] = np.sum(w*janela)
+    for x in range(borda, altura - borda):
+      for y in range(borda, largura - borda):
+        janela= lua[x-borda:x+borda+1,y-borda:y+borda+1]
+        dy[x,y] = np.sum(w*janela)
 
-plt.imshow(dx, cmap = 'gray')
+    plt.imshow(dy, cmap = 'gray')
 
-magnitude = np.sqrt(dx**2 + dy**2)
-plt.imshow(magnitude, cmap = 'gray')
+def filtro_sobel2 (img):
+    n = 3
+    borda = (n-1)//2
+    w = np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
+    altura, largura = lua.shape
+    dx = np.zeros((altura,largura))
 
-plt.imshow(img+magnitude, cmap = 'gray', vmax=255, vmin=0)
+    for x in range(borda, altura - borda):
+      for y in range(borda, largura - borda):
+        janela= lua[x-borda:x+borda+1,y-borda:y+borda+1]
+        dx[x,y] = np.sum(w*janela)
+
+    plt.imshow(dx, cmap = 'gray')
+
+def magnitude (img):
+    magnitude = np.sqrt(dx**2 + dy**2)
+    plt.imshow(magnitude, cmap = 'gray')
+
+def magnitude_mais_img (img, magnitude):
+    plt.imshow(img+magnitude, cmap = 'gray', vmax=255, vmin=0)
