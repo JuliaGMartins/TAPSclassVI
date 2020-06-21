@@ -14,100 +14,72 @@ from PIL import Image, ImageFilter
 
 img = cv2.imread('fig.jpg', cv2.IMREAD_GRAYSCALE)
 
-#Filtro da média
-def filtro_media (img):
-    n = 3
+#função de convolução
+def convolucao (borda, img, filtro):
+    altura, largura = img.shape
+    imagem = np.zeros((altura,largura))
+
+    for x in range(borda, altura - borda):
+      for y in range(borda, largura - borda):
+        janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
+        imagem[x,y] = np.sum(filtro * janela)
+
+    return imagem
+
+#Filtro gaussiano
+def filtro_gaussiano (img, n):
     borda = (n-1)//2
     filtro = np.array([[1,2,1],[2,4,2],[1,2,1]]) / 16
-    altura, largura = img.shape
-    imagem = np.zeros((altura,largura))
 
-    for x in range(borda, altura - borda):
-      for y in range(borda, largura - borda):
-        janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
-        imagem[x,y] = np.sum(filtro * janela)
+    return convolucao(borda, img, filtro)
 
-    plt.imshow(imagem, cmap= 'gray')
-    plt.show()
 
 #Filtro da média
-def filtro_media2 (img):
-    n = 5
+def filtro_media (img, n):
     borda = (n-1)//2
-    altura, largura = img.shape
     filtro = np.ones((n,n))/n**2
-    imagem = np.zeros((altura,largura))
 
-    for x in range(borda, altura - borda):
-      for y in range(borda, largura - borda):
-        janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
-        imagem[x,y] = np.sum(filtro * janela)
+    return convolucao(borda, img, filtro)
 
-    plt.imshow(imagem, cmap= 'gray')
-    plt.show()
 
 #filtro passa-alta / laplaciana
-def filtro_laplaciano (img):
-    n = 3
+def filtro_laplaciano (img, n):
     borda = (n-1)//2
     filtro = np.array([[0,1,0],[1,-4,1],[0,1,0]])
-    altura, largura = img.shape
-    imagem = np.zeros((altura,largura))
 
-    for x in range(borda, altura - borda):
-      for y in range(borda, largura - borda):
-        janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
-        imagem[x,y] = np.sum(filtro * janela)
-
-    plt.imshow(imagem, cmap='gray', vmax=255, vmin=0)
-    plt.show()
+    return convolucao(borda, img, filtro)
 
 #filtro sobel dy
-def filtro_sobel_dy (img):
-    n = 3
+def filtro_sobel_dy (img, n):
     borda = (n-1)//2
     filtro = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
-    altura, largura = img.shape
-    dy = np.zeros((altura,largura))
 
-    for x in range(borda, altura - borda):
-      for y in range(borda, largura - borda):
-        janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
-        dy[x,y] = np.sum(filtro * janela)
-
-    return dy
+    return convolucao(borda, img, filtro)
 
 #filtro sobel dx
-def filtro_sobel_dx (img):
-    n = 3
+def filtro_sobel_dx (img, n):
     borda = (n-1)//2
     filtro = np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
-    altura, largura = img.shape
-    dx = np.zeros((altura,largura))
 
-    for x in range(borda, altura - borda):
-      for y in range(borda, largura - borda):
-        janela= img[x-borda:x+borda+1,y-borda:y+borda+1]
-        dx[x,y] = np.sum(filtro*janela)
-
-    return dx
+    return convolucao(borda, img, filtro)
 
 #magnitude da imagem dada pelo dx e dy, obtendo as bordas
-def magnitude (img):
-    dx = filtro_sobel_dx(img)
-    dy = filtro_sobel_dy(img)
+def magnitude (img, n):
+    dx = filtro_sobel_dx(img, n)
+    dy = filtro_sobel_dy(img, n)
     magnitude = np.sqrt(dx**2 + dy**2)
     return magnitude
 
 #magnitune + imagem, destacando as bordas
-def magnitude_mais_img (img):
-    return img+magnitude(img)
+def magnitude_mais_img (img, n):
+    return img+magnitude(img, n)
 
 def show_img(img, fig, plot_index):
     fig.add_subplot(*plot_index)
     plt.imshow(img, cmap= 'gray', vmax=255, vmin=0)
 
 fig = plt.figure()
-show_img(img, fig, (1,2,1))
-show_img(magnitude_mais_img(img), fig, (1,2,2))
+show_img(img, fig, (1,3,1))
+show_img(magnitude_mais_img(img, 3), fig, (1,3,2))
+show_img(filtro_gaussiano(img, 3), fig, (1,3,3))
 plt.show()
